@@ -11,6 +11,7 @@ namespace PromotionEngine.Service.Services
         {
             try
             {
+                //Implement three A's fixed price promotion calculations.
                 var remainder = skuType.Count % 3;
                 int price = 0;
                 for (int typeCount = 3; typeCount <= skuType.Count; typeCount += 3)

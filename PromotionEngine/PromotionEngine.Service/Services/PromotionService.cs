@@ -11,9 +11,12 @@ namespace PromotionEngine.Service.Services
             try
             {
                 //Check and apply A's promotion
-                int aTypePrice = PromotionCheckAndApplyForAType(skuType);
+                int aSKUTypePrice = PromotionCheckAndApplyForAType(skuType);
 
-                return aTypePrice;                
+                //Check and apply B's promotion
+                int bSKUTypePrice = PromotionCheckAndApplyForBType(skuType);
+
+                return aSKUTypePrice + bSKUTypePrice;                
             }
             catch (Exception)
             {
@@ -39,6 +42,29 @@ namespace PromotionEngine.Service.Services
             {
                 //If no promotion applied.
                 price = aType.Count * 50;
+            }
+
+            return price;
+        }
+
+
+        private int PromotionCheckAndApplyForBType(List<string> skuType)
+        {
+            var bType = skuType.FindAll(e => e == "B");
+            int price = 0;
+
+            //Check for 2 B's promotion
+            if (bType.Count >= 2)
+            {
+                IPromotionApplyService promotionApplyService = new TwoBsFixedPricePromotion();
+                price = ApplyPromotion(promotionApplyService, bType);
+            }
+            //If any new promotion for B type comes add 'else if' check and promotion class for that
+
+            else
+            {
+                //If no promotion applied.
+                price = bType.Count * 30;
             }
 
             return price;

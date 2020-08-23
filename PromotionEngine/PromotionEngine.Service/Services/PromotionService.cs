@@ -17,9 +17,12 @@ namespace PromotionEngine.Service.Services
                 int bSKUTypePrice = PromotionCheckAndApplyForBType(skuType);
 
                 //Check and apply C's promotion
-                int cTypePrice = PromotionCheckAndApplyForCType(skuType);
+                int cSKUTypePrice = PromotionCheckAndApplyForCType(skuType);
 
-                return aSKUTypePrice + bSKUTypePrice;                
+                //Check and apply C's promotion
+                int dSKUTypePrice = PromotionCheckAndApplyForDType(skuType);
+
+                return aSKUTypePrice + bSKUTypePrice + cSKUTypePrice + dSKUTypePrice;
             }
             catch (Exception)
             {
@@ -94,6 +97,34 @@ namespace PromotionEngine.Service.Services
             {
                 //If no promotion applied.
                 price = cType.Count * 20;
+            }
+
+            return price;
+        }
+        private int PromotionCheckAndApplyForDType(List<string> skuType)
+        {
+            var cType = skuType.FindAll(e => e == "C");
+            var dType = skuType.FindAll(e => e == "D");
+            int price = 0;
+
+            if (cType.Count > 0 && dType.Count > 0)
+            {
+                IPromotionApplyService promotionApplyService = new SKUCAndDComboPromotion();
+                price = ApplyPromotion(promotionApplyService, skuType);
+
+                if (dType.Count > cType.Count)
+                {
+                    var promotionNotAppliedCTypeCount = dType.Count - cType.Count;
+                    price += (promotionNotAppliedCTypeCount * 15);
+                }
+            }
+
+            //If any new promotion for D type comes add 'else if' check and promotion class for that
+
+            else
+            {
+                //If no promotion applied.
+                price = dType.Count * 15;
             }
 
             return price;

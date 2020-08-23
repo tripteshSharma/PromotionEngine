@@ -19,7 +19,7 @@ namespace PromotionEngine.Service.Services
                 //Check and apply C's promotion
                 int cSKUTypePrice = PromotionCheckAndApplyForCType(skuType);
 
-                //Check and apply C's promotion
+                //Check and apply D's promotion
                 int dSKUTypePrice = PromotionCheckAndApplyForDType(skuType);
 
                 return aSKUTypePrice + bSKUTypePrice + cSKUTypePrice + dSKUTypePrice;
@@ -52,7 +52,6 @@ namespace PromotionEngine.Service.Services
 
             return price;
         }
-
 
         private int PromotionCheckAndApplyForBType(List<string> skuType)
         {
